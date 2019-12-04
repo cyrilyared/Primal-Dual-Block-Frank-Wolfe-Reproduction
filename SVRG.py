@@ -5,11 +5,11 @@ from scipy import sparse
 import numpy as np
 
 class SVRG:
-    def __init__(self):
-        self.iter = 5
-        self.mu = 10
-        self.eta = 5
-        self.l1Sparsity = 0.5
+    def __init__(self, iter, mu, eta, l1Sparsity):
+        self.iter = iter
+        self.mu = mu
+        self.eta = eta
+        self.l1Sparsity = l1Sparsity
 
     def opt(self, X, labels):
         samples = np.shape(X)[0]
@@ -32,14 +32,3 @@ class SVRG:
             vector_w = np.copy(vector_x)
             loss = smooth_hinge_loss_reg(X, labels, vector_x, self.mu / samples)
             print(i, "-th iter loss:", loss)
-
-X, y = libsvm_load('duke')
-
-ones = np.ones((X.shape[1], 1))
-rowsum = (X*ones).reshape((X.shape[0]))
-rowsum = np.diag(rowsum)
-inv_row = np.linalg.inv(rowsum)
-normalized = inv_row * X
-
-svrg = SVRG()
-svrg.opt(normalized, y)

@@ -1,18 +1,16 @@
 
 from utilities import *
-from DataLoader import *
 from scipy import sparse
-
 import numpy as np
 
 
 class STORC:
-    def __init__(self):
-        self.iter = 12
-        self.small_data = 0
-        self.L = 1
-        self.l1Sparsity = 300
-        self.mu = 10
+    def __init__(self, iter, mu, L, l1Sparsity, small_data):
+        self.iter = iter
+        self.small_data = small_data
+        self.L = L
+        self.l1Sparsity = l1Sparsity
+        self.mu = mu
         
     def opt(self, X, label):
         N, D = X.shape  # Number of samples and Number of dimensions
@@ -43,19 +41,3 @@ class STORC:
             w_s = x_s
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
             print(current_iter, "iter loss:", loss)
-
-"""
-X, y = libsvm_load('duke')
-
-ones = np.ones((X.shape[1], 1))
-rowsum = (X*ones).reshape((X.shape[0]))
-rowsum = np.diag(rowsum)
-inv_row = np.linalg.inv(rowsum)
-normalized = inv_row * X
-"""
-X, y = libsvm_load('rcv1_train.binary')
-
-
-storc = STORC()
-#storc.opt(normalized, y)
-storc.opt(X,y)

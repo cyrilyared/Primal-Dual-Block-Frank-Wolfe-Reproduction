@@ -1,14 +1,14 @@
 import numpy as np
 from utilities import *
-from DataLoader import *
 from scipy import sparse
 
 class AccPG:
-    def __init__(self):
-        self.iter = 500
-        self.eta = 100
-        self.mu = 10
-        self.l1Spar = 300
+    def __init__(self, iter, mu, eta, l1Sparsity):
+        self.iter = iter
+        self.eta = eta
+        self.mu = mu
+        self.l1Sparsity = l1Sparsity
+        print(iter, " ", eta, " ",mu, " ",l1Sparsity)
         
 
     def opt(self, X, label):
@@ -30,22 +30,9 @@ class AccPG:
             y_s = x_s + theta * gamma / (gamma + m * theta) * (v_s - x_s)
             grad = primal_grad_smooth_hinge_loss_reg(X, sparse.csr_matrix.transpose(X), label, y_s, self.mu / N)
             x_sp = y_s - self.eta * grad
-            x_sp = l1_projection(x_sp, self.l1Spar)
+            x_sp = l1_projection(x_sp, self.l1Sparsity)
             v_s = (1 - 1 / theta) * x_s + (1 / theta) * x_sp
             x_s = x_sp
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
             print(loss)
-
-
-X, y = libsvm_load('rcv1_train.binary')
-
-"""
-ones = np.ones((X.shape[1], 1))
-rowsum = (X*ones).reshape((X.shape[0]))
-rowsum = np.diag(rowsum)
-inv_row = np.linalg.inv(rowsum)
-normalized = inv_row * X
-"""
-accpg = AccPG()
-accpg.opt(X, y)
 

@@ -1,15 +1,14 @@
 from utilities import *
-from DataLoader import *
 from scipy import sparse
 import numpy as np
 
 
 class SVRF:
-    def __init__(self):
-        self.iter = 12
-        self.mu = 10
-        self.eta = 0.5
-        self.l1Sparsity = 300
+    def __init__(self, iter, mu, eta, l1Sparsity):
+        self.iter = iter
+        self.mu = mu
+        self.eta = eta
+        self.l1Sparsity = l1Sparsity
 
     def opt(self, X, label):
         N, D = X.shape  # Number of samples and Number of dimensions
@@ -46,10 +45,3 @@ class SVRF:
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
             print(current_iter, "iter loss:'", loss)
         print("prediction_accuracy:", prediction_accuracy(X, label, w_s))
-
-X, y = libsvm_load('rcv1_train.binary')
-
-
-
-svrf = SVRF()
-svrf.opt(X, y)

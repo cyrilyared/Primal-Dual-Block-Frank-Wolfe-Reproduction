@@ -1,19 +1,18 @@
 import numpy as np
 from scipy import sparse
 from utilities import *
-from DataLoader import *
 
 
 class PDBFW:
-    def __init__(self):
-        self.mu = 10
-        self.delta = 20
-        self.l0Sparsity = 500
-        self.l1Sparsity = 0.5
-        self.dualSparsity = 44
-        self.L = 1
-        self.iter = 100
-        self.eta = 0.5
+    def __init__(self, iter, mu, eta, l1Sparsity, l0Sparsity, dualSparsity, delta, L):
+        self.mu = mu
+        self.delta = delta
+        self.l0Sparsity = l0Sparsity
+        self.l1Sparsity = l1Sparsity
+        self.dualSparsity = dualSparsity
+        self.L = L
+        self.iter = iter
+        self.eta = eta
     
     def grad_f_star(self, y, label):
         result = y + label
@@ -66,14 +65,3 @@ class PDBFW:
             loss = smooth_hinge_loss_reg(X, label, x_i, self.mu / N)
             print(loss)
         print("prediction_accuracy: " + str(prediction_accuracy(X, label, x_i)) + '\n')
-        
-X, y = libsvm_load('duke')
-
-ones = np.ones((X.shape[1], 1))
-rowsum = (X*ones).reshape((X.shape[0]))
-rowsum = np.diag(rowsum)
-inv_row = np.linalg.inv(rowsum)
-normalized = inv_row * X
-
-pdbfw = PDBFW()
-pdbfw.opt(normalized, y)

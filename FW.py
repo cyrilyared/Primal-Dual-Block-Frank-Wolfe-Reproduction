@@ -1,14 +1,13 @@
 from utilities import *
-from DataLoader import *
 from scipy import sparse
 import numpy as np
 
 class FW:
-    def __init__(self):
-        self.iter = 500
-        self.mu = 10
-        self.eta = 0.5
-        self.l1Sparsity = 0.5
+    def __init__(self, iter, mu, eta, l1Sparsity):
+        self.iter = iter
+        self.mu = mu
+        self.eta = eta
+        self.l1Sparsity = l1Sparsity
 
 
     def opt(self, X, label):
@@ -34,14 +33,3 @@ class FW:
             print(current_iter, "iter loss:", loss)
 
         print("prediction_accuracy:", prediction_accuracy(X, label, eigen_vector))
-
-X, y = libsvm_load('duke')
-
-ones = np.ones((X.shape[1], 1))
-rowsum = (X*ones).reshape((X.shape[0]))
-rowsum = np.diag(rowsum)
-inv_row = np.linalg.inv(rowsum)
-normalized = inv_row * X
-
-fw = FW()
-fw.opt(normalized, y)
