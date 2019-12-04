@@ -1,4 +1,5 @@
 import numpy as np
+from datetime import datetime
 from utilities import *
 from scipy import sparse
 
@@ -8,7 +9,6 @@ class AccPG:
         self.eta = eta
         self.mu = mu
         self.l1Sparsity = l1Sparsity
-        print(iter, " ", eta, " ",mu, " ",l1Sparsity)
         
 
     def opt(self, X, label):
@@ -22,8 +22,10 @@ class AccPG:
         m = self.mu / N
         theta = 0
         X = sparse.csr_matrix(X)
-
+        losses = []
+        times = []
         for i in range(0, self.iter):
+            start = datetime.now()
             gamma = theta * theta * L
             theta = (m - gamma + np.sqrt((gamma - m) * (gamma - m) + 4 * L * gamma)) / (2 * L)
             
@@ -34,5 +36,10 @@ class AccPG:
             v_s = (1 - 1 / theta) * x_s + (1 / theta) * x_sp
             x_s = x_sp
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
-            print(loss)
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(i, "-iter loss: ", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, x_s))
+        return losses, times
 

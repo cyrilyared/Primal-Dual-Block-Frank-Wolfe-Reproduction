@@ -63,9 +63,12 @@ if __name__ == "__main__":
         printUsage()
         exit(0)
 
-    algo.opt(X,y)
-
+    losses, times = algo.opt(X, y)
+    f = open(sys.argv[2], "w")
+    f.write(', '.join(map(str, losses)))
+    f.write('\n')
+    f.write(', '.join(map(str, times)))
+    print("Total time (s):", sum(times))
     
-
 
     

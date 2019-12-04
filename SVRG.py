@@ -1,4 +1,5 @@
 from utilities import *
+from datetime import datetime
 from DataLoader import *
 from scipy import sparse
 
@@ -17,8 +18,10 @@ class SVRG:
         indices = np.arange(samples)
         vector_w = np.zeros(dimensions)
         X = sparse.csr_matrix(X)
+        losses = []
+        times = []
         for i in range(0, self.iter):
-            time_sum = 0
+            start = datetime.now()
             Nt = min(100, samples)
             vector_gw = primal_grad_smooth_hinge_loss_reg(X, sparse.csr_matrix.transpose(X), labels, vector_w, self.mu / samples)
             vector_x = np.copy(vector_w)
@@ -31,4 +34,9 @@ class SVRG:
                 vector_x = l1_projection(vector_x - self.eta * grad, self.l1Sparsity)
             vector_w = np.copy(vector_x)
             loss = smooth_hinge_loss_reg(X, labels, vector_x, self.mu / samples)
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
             print(i, "-th iter loss:", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, vector_x))
+        return losses, times

@@ -1,4 +1,5 @@
 from utilities import *
+from datetime import datetime
 from scipy import sparse
 import numpy as np
 
@@ -15,8 +16,10 @@ class SVRF:
         w_s = np.zeros(D)
         indices = np.arange(N)
         X = sparse.csr_matrix(X)
-
+        losses = []
+        times = []
         for current_iter in range(0, self.iter):
+            start = datetime.now()
             base = N / 100
             Nt = base - 2
             Gw = primal_grad_smooth_hinge_loss_reg(X, sparse.csr_matrix.transpose(X), label, w_s, self.mu / N)
@@ -40,8 +43,12 @@ class SVRF:
                     x_s[pos] += eta * self.l1Sparsity
                 if i % 100 == 0:
                     loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
-                    print(current_iter, "iter", i, "th inner loop loss:", loss)
+                    print(current_iter, "-iter ", i, "th inner loop loss:", loss)
             w_s = x_s
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
-            print(current_iter, "iter loss:'", loss)
-        print("prediction_accuracy:", prediction_accuracy(X, label, w_s))
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(current_iter, "-iter loss: ", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, w_s))
+        return losses, times

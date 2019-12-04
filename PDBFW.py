@@ -1,4 +1,5 @@
 import numpy as np
+from datetime import datetime
 from scipy import sparse
 from utilities import *
 
@@ -32,9 +33,12 @@ class PDBFW:
         z_i = np.matmul(np.transpose(X), y_i)
         delta_y = np.zeros(N)
         X = sparse.csr_matrix(X)
-
+        losses = []
+        times = []
         
         for current_Iter in range(0, self.iter):
+            start = datetime.now()
+
             ########################## Primal ###################
             grad_x_L = z_i + self.mu*x_i
             update_x = x_i - 1/(self.mu * self.L) * grad_x_L
@@ -63,5 +67,9 @@ class PDBFW:
             z_i = z_i + np.transpose((sparse.csr_matrix.transpose(X) * sparse.csr_matrix(delta_y.reshape(delta_y.shape[0], 1))).toarray()).reshape(X.shape[1])
         ############################# END ##################
             loss = smooth_hinge_loss_reg(X, label, x_i, self.mu / N)
-            print(loss)
-        print("prediction_accuracy: " + str(prediction_accuracy(X, label, x_i)) + '\n')
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(current_Iter, "-iter loss: ", loss)
+        print("Prediction Accuracy: " + str(prediction_accuracy(X, label, x_i)))
+        return losses, times

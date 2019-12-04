@@ -1,4 +1,5 @@
 import numpy as np
+from datetime import datetime
 from utilities import *
 from scipy import sparse
 
@@ -18,7 +19,10 @@ class SCGS:
         q_s = z_s
         w_s = z_s
         X = sparse.csr_matrix(X)
+        losses = []
+        times = []
         for i in range(0, self.iter):
+            start = datetime.now()
             gamma = 3.0 / (i + 3)
             z_s = (1 - gamma) * w_s + gamma * q_s
             m_k = min(N, max(100, int(N / 20)))
@@ -29,5 +33,10 @@ class SCGS:
             q_s = l1_projection(q_s, self.l1Sparsity)
             w_s = (1-gamma)*w_s + gamma * q_s
             loss = smooth_hinge_loss_reg(X, label, w_s, self.mu / N)
-            print(loss)
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(i, "-iter loss: ", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, w_s))
+        return losses, times
 

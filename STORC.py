@@ -1,5 +1,6 @@
 
 from utilities import *
+from datetime import datetime
 from scipy import sparse
 import numpy as np
 
@@ -19,7 +20,10 @@ class STORC:
         w_s = x_s
         base = 8
         X = sparse.csr_matrix(X)
+        losses = []
+        times = []
         for current_iter in range(0, self.iter):
+            start = datetime.now()
             Nt = min(min(N / 20, 200), base * 2 - 2)
             if self.small_data:
                 Nt = min(min((N / 5), 200), base * 2 - 2)
@@ -40,4 +44,9 @@ class STORC:
                 y_s = (1 - gamma) * y_s + gamma * x_s
             w_s = x_s
             loss = smooth_hinge_loss_reg(X, label, x_s, self.mu / N)
-            print(current_iter, "iter loss:", loss)
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(current_iter, "-iter loss: ", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, x_s))
+        return losses, times

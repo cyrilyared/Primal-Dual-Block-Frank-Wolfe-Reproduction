@@ -1,4 +1,5 @@
 from utilities import *
+from datetime import datetime
 from scipy import sparse
 import numpy as np
 
@@ -14,7 +15,11 @@ class FW:
         N, D = X.shape  # Number of samples and Number of dimensions
         eigen_vector = np.zeros((D))
         X = sparse.csr_matrix(X)
+        losses = []
+        times = []
         for current_iter in range(0, self.iter):
+            start = datetime.now()
+
             # Primal
             eta = self.eta * 2.0 / (current_iter + 3)
             grad = primal_grad_smooth_hinge_loss_reg(X, sparse.csr_matrix.transpose(X), label, eigen_vector, self.mu / N)
@@ -30,6 +35,9 @@ class FW:
             else:
                 eigen_vector[pos] += eta * self.l1Sparsity
             loss = smooth_hinge_loss_reg(X, label, eigen_vector, self.mu / N)
-            print(current_iter, "iter loss:", loss)
-
-        print("prediction_accuracy:", prediction_accuracy(X, label, eigen_vector))
+            end = datetime.now()
+            losses.append(loss)
+            times.append((end-start).microseconds / 1000000)
+            print(current_iter, "-iter loss: ", loss)
+        print("Prediction Accuracy:", prediction_accuracy(X, label, eigen_vector))
+        return losses, times
