@@ -38,5 +38,5 @@ class SVRG:
             losses.append(loss)
             times.append((end-start).microseconds / 1000000)
             print(i, "-th iter loss:", loss)
-        print("Prediction Accuracy:", prediction_accuracy(X, label, vector_x))
+        print("Prediction Accuracy:", prediction_accuracy(X, labels, vector_x))
         return losses, times
