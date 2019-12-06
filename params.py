@@ -12,6 +12,8 @@ params = {
     "FW_eta": 0.5,
     "AccPG_iter": 100,
     "AccPG_eta": 1.5,
+    "SVRF_iter": 100,
+    "SVRF_eta": 0.4,
     "STORC_iter": 10,
     "STORC_small_data": 1,
     "STORC_L": 0.1,

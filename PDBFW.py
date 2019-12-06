@@ -27,10 +27,10 @@ class PDBFW:
         N = X.shape[0]
         D = X.shape[1]
         x_i = np.zeros(D)
-        y_i = np.random.uniform(-1, 1, (N))   
+        y_i = np.random.uniform(-1, 1, (N))
         
         w_i = np.zeros(N)
-        z_i = np.matmul(np.transpose(X), y_i)
+        z_i = sparse.csr_matrix.transpose(X).dot(y_i)
         delta_y = np.zeros(N)
         X = sparse.csr_matrix(X)
         losses = []
@@ -41,7 +41,7 @@ class PDBFW:
 
             ########################## Primal ###################
             grad_x_L = z_i + self.mu*x_i
-            update_x = x_i - 1/(self.mu * self.L) * grad_x_L
+            update_x = x_i - 1 / (self.mu * self.L) * grad_x_L
             delta_x = l1_l0_projection(update_x, self.l0Sparsity, self.l1Sparsity)
             x_i = (1 - self.eta) * x_i + self.eta * delta_x
             w_i = (1 - self.eta) * w_i + self.eta * (X * (sparse.csr_matrix(delta_x.reshape(delta_x.shape[0], 1)))).toarray().reshape((X.shape[0]))
@@ -50,10 +50,10 @@ class PDBFW:
             coordin_selector = l0_projection(coordin_selector, self.dualSparsity)
             delta_y = np.zeros(N)
             for j in range(0, N):
-                if coordin_selector[j] == 0: 
+                if coordin_selector[j] == 0:
                     continue
-                new_y_j_pos = y_i[j] - self.delta + self.delta * w_i[j] / (self.delta + 1)
-                new_y_j_neg = y_i[j] + self.delta + self.delta * w_i[j] / (self.delta + 1)
+                new_y_j_pos = (y_i[j] - self.delta + self.delta * w_i[j]) / (self.delta + 1)
+                new_y_j_neg = (y_i[j] + self.delta + self.delta * w_i[j]) / (self.delta + 1)
                 if (label[j] == - 1):
                     new_y_j = min(max(new_y_j_neg, 0.0), 1.0)
                 elif (label[j] == 1):
@@ -64,7 +64,7 @@ class PDBFW:
                     exit(0)
                 delta_y[j] = new_y_j - y_i[j]
                 y_i[j] = new_y_j
-            z_i = z_i + np.transpose((sparse.csr_matrix.transpose(X) * sparse.csr_matrix(delta_y.reshape(delta_y.shape[0], 1))).toarray()).reshape(X.shape[1])
+            z_i = z_i + (sparse.csr_matrix.transpose(X).dot(sparse.csr_matrix(delta_y.reshape(delta_y.shape[0], 1)))).toarray().reshape(X.shape[1])
         ############################# END ##################
             loss = smooth_hinge_loss_reg(X, label, x_i, self.mu / N)
             end = datetime.now()

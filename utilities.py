@@ -185,7 +185,7 @@ def l1_l0_projection(vector, s, tau):
             break
     if np.linalg.norm(l0, 1) <= tau:
         return l0
-    theta = simplex_projection_theta(vector, tau)
+    theta = simplex_projection_theta(compact_l0_abs, tau)
     result = np.zeros(size)
     for i in range(0, s):
         idx = compact_l0_idx[i]

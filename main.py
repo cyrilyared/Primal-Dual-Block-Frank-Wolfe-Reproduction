@@ -50,7 +50,7 @@ if __name__ == "__main__":
     elif (sys.argv[2] == "FW"):
         algo = FW(param.get("FW_iter"), param.get("mu"), param.get("FW_eta"), param.get("l1Sparsity"))
     elif (sys.argv[2] == "PDBFW"):
-        algo = PDBFW(param.get("PDBFW_iter"), param.get("mu"), param.get("PDBFW_eta"), param.get("l1Sparsity"), param.get("PDBFW_l0Sparsity"),param.get("PDBFW_dualSparsity"), param.get("PDBFW_delta"), param.get("PDBFW_L"))
+        algo = PDBFW(param.get("PDBFW_iter"), param.get("mu"), param.get("PDBFW_eta"), param.get("l1Sparsity"), param.get("PDBFW_l0Sparsity"), param.get("PDBFW_dualSparsity"), param.get("PDBFW_delta"), param.get("PDBFW_L"))
     elif (sys.argv[2] == "SCGS"):
         algo = SCGS(param.get("SCGS_iter"), param.get("mu"), param.get("SCGS_L"), param.get("l1Sparsity"))
     elif (sys.argv[2] == "STORC"):
@@ -64,7 +64,7 @@ if __name__ == "__main__":
         exit(0)
 
     losses, times = algo.opt(X, y)
-    f = open(sys.argv[2], "w")
+    f = open('./result/' + sys.argv[2], "w")
     f.write(', '.join(map(str, losses)))
     f.write('\n')
     f.write(', '.join(map(str, times)))
