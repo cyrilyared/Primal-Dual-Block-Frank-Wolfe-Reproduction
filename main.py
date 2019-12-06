@@ -21,7 +21,7 @@ def normalize(X):
 
 def printUsage():
     print("Usage: ./main.py <file> <algorithm>")
-    print("Files: duke, rcv, mnist")
+    print("Files: duke, rcv, mnist, rna")
     print("Algorithms: AccPG, FW, PDBFW, SCGS, STORC, SVRF, SVRG")
 
 if __name__ == "__main__":
