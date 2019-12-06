@@ -35,6 +35,10 @@ if __name__ == "__main__":
         file = "rcv1_train.binary"
     elif sys.argv[1] == "mnist":
         file = "mnist.09.bin"
+    elif sys.argv[1] == "rna":
+        file = "mnist.09.bin"
+    elif sys.argv[1] == "rna":
+        file = "cod-rna"
     else:
         printUsage()
         exit(0)
@@ -48,6 +52,8 @@ if __name__ == "__main__":
         param = params.get("rcv")
     elif sys.argv[1] == "mnist":
         param = params.get("mnist")
+    elif sys.argv[1] == "rna":
+        param = params.get("rna")
 
     if (sys.argv[2] == "AccPG"):
         algo = AccPG(param.get("AccPG_iter"), param.get("mu"), param.get("AccPG_eta"), param.get("l1Sparsity"))
