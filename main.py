@@ -66,13 +66,13 @@ if __name__ == "__main__":
     elif (sys.argv[2] == "STORC"):
         algo = STORC(param.get("STORC_iter"), param.get("mu"), param.get("STORC_L"), param.get("l1Sparsity"), param.get("STORC_small_data"))
     elif (sys.argv[2] == "SVRF"):
-        algo = SVRF(param.get("SVRF_iter"), param.get("mu"), param.get("SVRF_eta"), param.get("l1Sparsity"))
+        algo = SVRF(param.get("SVRF_iter"), param.get("mu"), param.get("SVRF_eta"), param.get("l1Sparsity"), small_data=param.get("SVRF_small_data"))
     elif (sys.argv[2] == "SVRG"):
         algo = SVRG(param.get("SVRG_iter"), param.get("mu"), param.get("SVRG_eta"), param.get("l1Sparsity"))
     else:
         printUsage()
         exit(0)
-
+        
     losses, times = algo.opt(X, y)
     f = open('./result/' + sys.argv[2], "w")
     f.write(', '.join(map(str, losses)))
