@@ -36,7 +36,7 @@ class SVRG:
             loss = smooth_hinge_loss_reg(X, labels, vector_x, self.mu / samples)
             end = datetime.now()
             losses.append(loss)
-            times.append((end-start).microseconds / 1000000)
+            times.append((end - start).total_seconds())
             print(i, "-th iter loss:", loss)
         print("Prediction Accuracy:", prediction_accuracy(X, labels, vector_x))
         return losses, times

@@ -35,7 +35,7 @@ class SCGS:
             loss = smooth_hinge_loss_reg(X, label, w_s, self.mu / N)
             end = datetime.now()
             losses.append(loss)
-            times.append((end-start).microseconds / 1000000)
+            times.append((end-start).total_seconds())
             print(i, "-iter loss: ", loss)
         print("Prediction Accuracy:", prediction_accuracy(X, label, w_s))
         return losses, times

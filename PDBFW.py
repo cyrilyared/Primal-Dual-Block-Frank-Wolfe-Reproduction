@@ -29,10 +29,10 @@ class PDBFW:
         x_i = np.zeros(D)
         y_i = np.random.uniform(-1, 1, (N))
         
+        X = sparse.csr_matrix(X)
         w_i = np.zeros(N)
         z_i = sparse.csr_matrix.transpose(X).dot(y_i)
         delta_y = np.zeros(N)
-        X = sparse.csr_matrix(X)
         losses = []
         times = []
         
@@ -69,7 +69,7 @@ class PDBFW:
             loss = smooth_hinge_loss_reg(X, label, x_i, self.mu / N)
             end = datetime.now()
             losses.append(loss)
-            times.append((end-start).microseconds / 1000000)
+            times.append((end-start).total_seconds())
             print(current_Iter, "-iter loss: ", loss)
         print("Prediction Accuracy: " + str(prediction_accuracy(X, label, x_i)))
         return losses, times

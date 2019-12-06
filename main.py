@@ -21,7 +21,7 @@ def normalize(X):
 
 def printUsage():
     print("Usage: ./main.py <file> <algorithm>")
-    print("Files: duke, rcv")
+    print("Files: duke, rcv, mnist")
     print("Algorithms: AccPG, FW, PDBFW, SCGS, STORC, SVRF, SVRG")
 
 if __name__ == "__main__":
@@ -33,6 +33,8 @@ if __name__ == "__main__":
         file = "duke"
     elif sys.argv[1] == "rcv":
         file = "rcv1_train.binary"
+    elif sys.argv[1] == "mnist":
+        file = "mnist.09.bin"
     else:
         printUsage()
         exit(0)
@@ -44,6 +46,8 @@ if __name__ == "__main__":
         param = params.get("duke")
     elif sys.argv[1] == "rcv":
         param = params.get("rcv")
+    elif sys.argv[1] == "mnist":
+        param = params.get("mnist")
 
     if (sys.argv[2] == "AccPG"):
         algo = AccPG(param.get("AccPG_iter"), param.get("mu"), param.get("AccPG_eta"), param.get("l1Sparsity"))
