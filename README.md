@@ -17,3 +17,5 @@
 * Parameters: All hyperparameters can be edited in `params.py`.
 
 Original Paper: https://arxiv.org/pdf/1906.02436.pdf
+
+Reproduction Paper: https://openreview.net/pdf?id=aCt-q9sJ_X
