@@ -36,8 +36,6 @@ if __name__ == "__main__":
     elif sys.argv[1] == "mnist":
         file = "mnist.09.bin"
     elif sys.argv[1] == "rna":
-        file = "mnist.09.bin"
-    elif sys.argv[1] == "rna":
         file = "cod-rna"
     else:
         printUsage()
